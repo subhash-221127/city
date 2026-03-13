@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CityFix Admin - Officer Detail</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="../js/theme.js"></script>
+  <style>
+    .detail-page { max-width: 900px; }
+    .profile-hero {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 40px; margin-bottom: 28px;
+      display: flex; gap: 32px; align-items: center; position: relative;
+    }
+    .profile-hero::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 4px 4px 0 0;
+    }
+    .profile-avatar {
+      width: 120px; height: 120px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 3rem; font-weight: 800; flex-shrink: 0;
+      box-shadow: 0 10px 30px rgba(249,115,22,0.2);
+    }
+    .profile-info h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
+    .profile-info .designation { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 12px; font-weight: 600; }
+    .stats-row { display: flex; gap: 40px; margin-top: 24px; }
+    .stat-item { text-align: left; }
+    .stat-item .label { font-size: 0.82rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: block; }
+    .stat-item .value { font-size: 1.3rem; font-weight: 700; color: var(--text-primary); }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .info-card { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 24px; }
+    .info-card h4 { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
+    .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--card-border); }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { font-size: 0.9rem; color: var(--text-secondary); }
+    .info-value { font-size: 0.95rem; font-weight: 600; }
+    .action-section { margin-top: 32px; display: flex; gap: 16px; justify-content: flex-end; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><div class="sidebar-logo">C</div><div class="sidebar-brand">City<span>Fix</span></div></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
+        <a href="complaints.html" class="sidebar-link"><span class="icon">📋</span> Complaints</a>
+        <a href="officers.html" class="sidebar-link active"><span class="icon">👮</span> Officers</a>
+        <a href="citizens.html" class="sidebar-link"><span class="icon">👥</span> Citizens</a>
+        <a href="departments.html" class="sidebar-link"><span class="icon">🏢</span> Departments</a>
+        <a href="officer-requests.html" class="sidebar-link"><span class="icon">📩</span> Officer Requests <span class="badge">4</span></a>
+      </nav>
+      <div class="sidebar-footer"><a href="../auth.html" class="sidebar-link"><span class="icon">🚪</span> Logout</a></div>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><h1>Officer Profile</h1><span class="breadcrumb" id="breadcrumb">Officer Detail</span></div>
+        <div class="topbar-right">
+          <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+          <div class="admin-profile" id="admin-profile" onclick="document.getElementById('profile-dropdown').classList.toggle('show')">
+            <div class="admin-avatar">AD</div>
+            <div class="admin-info"><div class="name">Admin User</div><div class="role">Administrator</div></div>
+            <div class="profile-dropdown" id="profile-dropdown"><a href="#">👤 My Profile</a><a href="../auth.html">🚪 Logout</a></div>
+          </div>
+        </div>
+      </header>
+      <div class="page-content detail-page" id="page-content">
+        <!-- JS Populated -->
+      </div>
+    </div>
+  </div>
+  <script src="../js/demo-data.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const officer = DEMO_OFFICERS.find(o => o.id === id);
+
+    if (!officer) {
+      document.getElementById('page-content').innerHTML = `<div style="text-align:center;padding:100px;"><h2>Officer Not Found</h2><a href="officers.html" class="btn btn-primary" style="margin-top:20px;">Back to Officers</a></div>`;
+    } else {
+      document.getElementById('breadcrumb').textContent = officer.name + ' - ' + officer.id;
+      const initials = officer.name.split(' ').map(n=>n[0]).join('');
+      document.getElementById('page-content').innerHTML = `
+        <button class="btn btn-outline btn-sm" onclick="window.location.href='officers.html'" style="margin-bottom:20px;">← Back to Officers</button>
+        <div class="profile-hero">
+          <div class="profile-avatar">${initials}</div>
+          <div class="profile-info">
+            <h2>${officer.name}</h2>
+            <div class="designation">${officer.designation}</div>
+            <span class="status-badge ${officer.status.toLowerCase().replace(' ','-')}">${officer.status}</span>
+            <div class="stats-row">
+              <div class="stat-item"><span class="label">Total Cases</span><span class="value">${officer.casesHandled}</span></div>
+              <div class="stat-item"><span class="label">Resolved</span><span class="value" style="color:var(--success)">${officer.casesResolved}</span></div>
+              <div class="stat-item"><span class="label">Success Rate</span><span class="value">${Math.round((officer.casesResolved/officer.casesHandled)*100)}%</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-grid">
+          <div class="info-card">
+            <h4>📞 Contact Information</h4>
+            <div class="info-row"><span class="info-label">Email</span><span class="info-value">${officer.email}</span></div>
+            <div class="info-row"><span class="info-label">Phone</span><span class="info-value">${officer.phone}</span></div>
+            <div class="info-row"><span class="info-label">Office</span><span class="info-value">Headquarters, Floor 4</span></div>
+          </div>
+          <div class="info-card">
+            <h4>🏢 Employment Details</h4>
+            <div class="info-row"><span class="info-label">Officer ID</span><span class="info-value">${officer.id}</span></div>
+            <div class="info-row"><span class="info-label">Department</span><span class="info-value">${officer.department}</span></div>
+            <div class="info-row"><span class="info-label">Join Date</span><span class="info-value">${officer.joinDate}</span></div>
+          </div>
+        </div>
+        <div class="action-section">
+          <button class="btn btn-outline" onclick="alert('Password reset link sent to officer email.')">Reset Password</button>
+          <button class="btn btn-danger" onclick="if(confirm('Are you sure you want to remove this officer?')) { window.location.href='officers.html'; }">🗑️ Remove Officer</button>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

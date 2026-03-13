@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CityFix Admin - Citizens</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><div class="sidebar-logo">C</div><div class="sidebar-brand">City<span>Fix</span></div></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
+        <a href="complaints.html" class="sidebar-link"><span class="icon">📋</span> Complaints</a>
+        <a href="officers.html" class="sidebar-link"><span class="icon">👮</span> Officers</a>
+        <a href="citizens.html" class="sidebar-link active"><span class="icon">👥</span> Citizens</a>
+        <a href="departments.html" class="sidebar-link"><span class="icon">🏢</span> Departments</a>
+        <a href="officer-requests.html" class="sidebar-link"><span class="icon">📩</span> Officer Requests <span class="badge">4</span></a>
+      </nav>
+      <div class="sidebar-footer"><a href="../auth.html" class="sidebar-link"><span class="icon">🚪</span> Logout</a></div>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><h1>Citizens</h1><span class="breadcrumb">Citizen Management</span></div>
+        <div class="topbar-right">
+          <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+          <div class="admin-profile" id="admin-profile" onclick="document.getElementById('profile-dropdown').classList.toggle('show')">
+            <div class="admin-avatar">AD</div>
+            <div class="admin-info"><div class="name">Admin User</div><div class="role">Administrator</div></div>
+            <div class="profile-dropdown" id="profile-dropdown"><a href="#">👤 My Profile</a><a href="../auth.html">🚪 Logout</a></div>
+          </div>
+        </div>
+      </header>
+      <div class="page-content">
+        <div class="filter-bar">
+          <div class="search-box">
+            <span>🔍</span><input type="text" id="search-input" placeholder="Search citizens by name, email, or ID..." oninput="renderCitizens()" style="width:320px;">
+          </div>
+          <div style="margin-left:auto;font-size:0.85rem;color:var(--text-secondary);font-weight:600;" id="citizen-total"></div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header"><h3 id="citizens-count">👥 Citizens (0)</h3></div>
+          <div class="section-card-body">
+            <table class="data-table"><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Complaints</th><th>Joined</th><th>Action</th></tr></thead>
+              <tbody id="citizens-body"></tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/demo-data.js"></script>
+  <script>
+    let citizens = [...DEMO_CITIZENS];
+    function showCitizen(id) {
+      window.location.href = 'citizen-detail.html?id=' + id;
+    }
+    function removeCitizen(id) {
+      if (!confirm('Remove this citizen?')) return;
+      citizens = citizens.filter(c => c.id !== id); closeModal(); renderCitizens();
+    }
+    function renderCitizens() {
+      const q = document.getElementById('search-input').value.toLowerCase();
+      let data = [...citizens];
+      if (q) data = data.filter(c => c.name.toLowerCase().includes(q) || c.id.toLowerCase().includes(q) || c.email.toLowerCase().includes(q));
+      document.getElementById('citizens-count').textContent = `👥 Citizens (${data.length})`;
+      document.getElementById('citizen-total').textContent = `Total Registered: ${citizens.length}`;
+      document.getElementById('citizens-body').innerHTML = data.map(c => `
+        <tr onclick="showCitizen('${c.id}')"><td><strong>${c.id}</strong></td><td>${c.name}</td><td>${c.email}</td><td>${c.phone}</td>
+        <td>${c.totalComplaints}</td><td>${c.joinDate}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="event.stopPropagation();removeCitizen('${c.id}')">Remove</button></td></tr>`).join('');
+    }
+    renderCitizens();
+    document.addEventListener('click', e => { if (!document.getElementById('admin-profile').contains(e.target)) document.getElementById('profile-dropdown').classList.remove('show'); });
+  </script>
+</body>
+</html>

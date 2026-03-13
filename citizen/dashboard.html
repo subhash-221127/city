@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CityFix - Citizen Dashboard</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><div class="sidebar-logo">C</div><div class="sidebar-brand">City<span>Fix</span></div></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link active"><span class="icon">📊</span> Dashboard</a>
+        <a href="#" class="sidebar-link"><span class="icon">📋</span> My Complaints</a>
+        <a href="#" class="sidebar-link"><span class="icon">➕</span> New Complaint</a>
+        <a href="#" class="sidebar-link"><span class="icon">👤</span> My Profile</a>
+      </nav>
+      <div class="sidebar-footer"><a href="../auth.html" class="sidebar-link"><span class="icon">🚪</span> Logout</a></div>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><h1>Dashboard</h1><span class="breadcrumb">Welcome back!</span></div>
+        <div class="topbar-right">
+          <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+          <div class="admin-profile" id="admin-profile" onclick="document.getElementById('profile-dropdown').classList.toggle('show')">
+            <div class="admin-avatar">RS</div>
+            <div class="admin-info"><div class="name">Rahul Sharma</div><div class="role">Citizen</div></div>
+            <div class="profile-dropdown" id="profile-dropdown"><a href="#">👤 My Profile</a><a href="../auth.html">🚪 Logout</a></div>
+          </div>
+        </div>
+      </header>
+      <div class="page-content">
+        <div class="citizen-welcome">
+          <h2>👋 Welcome, Rahul!</h2>
+          <p>Track your complaints and help us build a better city together.</p>
+        </div>
+        <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);">
+          <div class="stat-card blue"><div class="stat-card-header"><div class="stat-card-icon blue">📋</div></div><div class="stat-value">3</div><div class="stat-label">Total Complaints</div></div>
+          <div class="stat-card orange"><div class="stat-card-header"><div class="stat-card-icon orange">⏳</div></div><div class="stat-value">1</div><div class="stat-label">Pending</div></div>
+          <div class="stat-card purple"><div class="stat-card-header"><div class="stat-card-icon purple">🔄</div></div><div class="stat-value">1</div><div class="stat-label">In Progress</div></div>
+          <div class="stat-card green"><div class="stat-card-header"><div class="stat-card-icon green">✅</div></div><div class="stat-value">1</div><div class="stat-label">Resolved</div></div>
+        </div>
+        <div class="section-card">
+          <div class="section-card-header"><h3>📋 My Recent Complaints</h3></div>
+          <div class="section-card-body">
+            <table class="data-table">
+              <thead><tr><th>ID</th><th>Title</th><th>Department</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody>
+                <tr><td><strong>CF-1001</strong></td><td>Water pipeline leakage on MG Road</td><td>Water Supply</td><td><span class="status-badge pending">Pending</span></td><td>2026-03-13</td></tr>
+                <tr><td><strong>CF-1020</strong></td><td>Street drainage blocked in Sector 3</td><td>Sanitation</td><td><span class="status-badge in-progress">In Progress</span></td><td>2026-03-10</td></tr>
+                <tr><td><strong>CF-1025</strong></td><td>Park bench damaged near Gate 2</td><td>Parks & Recreation</td><td><span class="status-badge resolved">Resolved</span></td><td>2026-02-28</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('click', e => { if (!document.getElementById('admin-profile').contains(e.target)) document.getElementById('profile-dropdown').classList.remove('show'); });
+  </script>
+</body>
+</html>

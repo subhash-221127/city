@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CityFix Admin - Citizen Detail</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="../js/theme.js"></script>
+  <style>
+    .detail-page { max-width: 900px; }
+    .profile-hero {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 40px; margin-bottom: 28px;
+      display: flex; gap: 32px; align-items: center; position: relative;
+    }
+    .profile-hero::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 4px 4px 0 0;
+    }
+    .profile-avatar {
+      width: 100px; height: 100px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 2.5rem; font-weight: 800; flex-shrink: 0;
+    }
+    .profile-info h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
+    .profile-info .subtitle { font-size: 1rem; color: var(--text-secondary); margin-bottom: 12px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .info-card { background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); padding: 24px; }
+    .info-card h4 { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
+    .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--card-border); }
+    .info-row:last-child { border-bottom: none; }
+    .info-label { font-size: 0.9rem; color: var(--text-secondary); }
+    .info-value { font-size: 0.95rem; font-weight: 600; }
+    .complaints-table-container { margin-top: 24px; background: var(--card); border: 1px solid var(--card-border); border-radius: var(--radius); overflow: hidden; }
+    .complaints-table-header { padding: 16px 24px; background: var(--input-bg); border-bottom: 1px solid var(--card-border); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><div class="sidebar-logo">C</div><div class="sidebar-brand">City<span>Fix</span></div></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
+        <a href="complaints.html" class="sidebar-link"><span class="icon">📋</span> Complaints</a>
+        <a href="officers.html" class="sidebar-link"><span class="icon">👮</span> Officers</a>
+        <a href="citizens.html" class="sidebar-link active"><span class="icon">👥</span> Citizens</a>
+        <a href="departments.html" class="sidebar-link"><span class="icon">🏢</span> Departments</a>
+        <a href="officer-requests.html" class="sidebar-link"><span class="icon">📩</span> Officer Requests <span class="badge">4</span></a>
+      </nav>
+      <div class="sidebar-footer"><a href="../auth.html" class="sidebar-link"><span class="icon">🚪</span> Logout</a></div>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><h1>Citizen Profile</h1><span class="breadcrumb" id="breadcrumb">Citizen Detail</span></div>
+        <div class="topbar-right">
+          <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+          <div class="admin-profile" id="admin-profile" onclick="document.getElementById('profile-dropdown').classList.toggle('show')">
+            <div class="admin-avatar">AD</div>
+            <div class="admin-info"><div class="name">Admin User</div><div class="role">Administrator</div></div>
+            <div class="profile-dropdown" id="profile-dropdown"><a href="#">👤 My Profile</a><a href="../auth.html">🚪 Logout</a></div>
+          </div>
+        </div>
+      </header>
+      <div class="page-content detail-page" id="page-content">
+        <!-- JS Populated -->
+      </div>
+    </div>
+  </div>
+  <script src="../js/demo-data.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const citizen = DEMO_CITIZENS.find(c => c.id === id);
+
+    if (!citizen) {
+      document.getElementById('page-content').innerHTML = `<div style="text-align:center;padding:100px;"><h2>Citizen Not Found</h2><a href="citizens.html" class="btn btn-primary" style="margin-top:20px;">Back to Citizens</a></div>`;
+    } else {
+      document.getElementById('breadcrumb').textContent = citizen.name + ' - ' + citizen.id;
+      const initials = citizen.name.split(' ').map(n=>n[0]).join('');
+      const citizenComplaints = DEMO_COMPLAINTS.filter(c => c.citizenId === id || c.citizen === citizen.name);
+      
+      document.getElementById('page-content').innerHTML = `
+        <button class="btn btn-outline btn-sm" onclick="window.location.href='citizens.html'" style="margin-bottom:20px;">← Back to Citizens</button>
+        <div class="profile-hero">
+          <div class="profile-avatar">${initials}</div>
+          <div class="profile-info">
+            <h2>${citizen.name}</h2>
+            <div class="subtitle">Citizen since ${citizen.joinDate}</div>
+            <div style="display:flex;gap:12px;margin-top:16px;">
+              <span class="badge green" style="padding:6px 12px;font-size:0.85rem;">Active Member</span>
+              <span class="badge blue" style="padding:6px 12px;font-size:0.85rem;">${citizenComplaints.length} Complaints Filed</span>
+            </div>
+          </div>
+        </div>
+        <div class="detail-grid">
+          <div class="info-card">
+            <h4>📞 Contact Information</h4>
+            <div class="info-row"><span class="info-label">Email</span><span class="info-value">${citizen.email}</span></div>
+            <div class="info-row"><span class="info-label">Phone</span><span class="info-value">${citizen.phone}</span></div>
+            <div class="info-row"><span class="info-label">Address</span><span class="info-value">123 City Center, Sector 4</span></div>
+          </div>
+          <div class="info-card">
+            <h4>🆔 Account Details</h4>
+            <div class="info-row"><span class="info-label">Citizen ID</span><span class="info-value">${citizen.id}</span></div>
+            <div class="info-row"><span class="info-label">Join Date</span><span class="info-value">${citizen.joinDate}</span></div>
+            <div class="info-row"><span class="info-label">Last Login</span><span class="info-value">Today at 10:45 AM</span></div>
+          </div>
+        </div>
+        <div class="complaints-table-container">
+          <div class="complaints-table-header">Recent Complaints by ${citizen.name}</div>
+          <div class="section-card-body">
+            <table class="data-table">
+              <thead><tr><th>ID</th><th>Title</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody>
+                ${citizenComplaints.map(c => `
+                  <tr onclick="window.location.href='complaint-detail.html?id=${c.id}'">
+                    <td><strong>${c.id}</strong></td><td>${c.title}</td>
+                    <td><span class="status-badge ${c.status.toLowerCase().replace(' ','-')}">${c.status}</span></td>
+                    <td>${c.date}</td>
+                  </tr>
+                `).join('') || '<tr><td colspan="4" style="text-align:center;padding:20px;">No complaints found</td></tr>'}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="margin-top:32px;display:flex;justify-content:flex-end;gap:16px;">
+          <button class="btn btn-danger" onclick="if(confirm('Restrict this user account?')) alert('Account restricted.')">Restrict Account</button>
+          <button class="btn btn-outline" onclick="if(confirm('Delete citizen data?')) { window.location.href='citizens.html'; }">Delete Account</button>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>

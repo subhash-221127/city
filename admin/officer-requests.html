@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CityFix Admin - Officer Requests</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-header"><div class="sidebar-logo">C</div><div class="sidebar-brand">City<span>Fix</span></div></div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="sidebar-link"><span class="icon">📊</span> Dashboard</a>
+        <a href="complaints.html" class="sidebar-link"><span class="icon">📋</span> Complaints</a>
+        <a href="officers.html" class="sidebar-link"><span class="icon">👮</span> Officers</a>
+        <a href="citizens.html" class="sidebar-link"><span class="icon">👥</span> Citizens</a>
+        <a href="departments.html" class="sidebar-link"><span class="icon">🏢</span> Departments</a>
+        <a href="officer-requests.html" class="sidebar-link active"><span class="icon">📩</span> Officer Requests <span class="badge" id="req-badge">4</span></a>
+      </nav>
+      <div class="sidebar-footer"><a href="../auth.html" class="sidebar-link"><span class="icon">🚪</span> Logout</a></div>
+    </aside>
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left"><h1>Officer Requests</h1><span class="breadcrumb">Pending Registrations</span></div>
+        <div class="topbar-right">
+          <button class="theme-toggle" onclick="toggleTheme()"><span id="theme-icon">🌙</span></button>
+          <div class="admin-profile" id="admin-profile" onclick="document.getElementById('profile-dropdown').classList.toggle('show')">
+            <div class="admin-avatar">AD</div>
+            <div class="admin-info"><div class="name">Admin User</div><div class="role">Administrator</div></div>
+            <div class="profile-dropdown" id="profile-dropdown"><a href="#">👤 My Profile</a><a href="../auth.html">🚪 Logout</a></div>
+          </div>
+        </div>
+      </header>
+      <div class="page-content">
+        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:28px;">
+          <div class="stat-card orange"><div class="stat-card-header"><div class="stat-card-icon orange">📩</div></div><div class="stat-value" id="pending-count">0</div><div class="stat-label">Pending Requests</div></div>
+          <div class="stat-card green"><div class="stat-card-header"><div class="stat-card-icon green">✅</div></div><div class="stat-value" id="accepted-count">0</div><div class="stat-label">Accepted</div></div>
+          <div class="stat-card red"><div class="stat-card-header"><div class="stat-card-icon red">❌</div></div><div class="stat-value" id="rejected-count">0</div><div class="stat-label">Rejected</div></div>
+        </div>
+        <div id="requests-list"></div>
+        <div id="empty-state" class="hidden" style="text-align:center;padding:60px;color:var(--text-secondary);">
+          <div style="font-size:3rem;margin-bottom:16px;">📭</div>
+          <div style="font-size:1.1rem;font-weight:600;">No pending requests</div>
+          <div style="font-size:0.9rem;margin-top:4px;">All officer requests have been processed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/demo-data.js"></script>
+  <script>
+    let requests = [...DEMO_OFFICER_REQUESTS];
+    let accepted = 0, rejected = 0;
+    function showRequest(id) {
+      window.location.href = 'request-detail.html?id=' + id;
+    }
+    function handleRequest(id, action) {
+      const r = requests.find(x => x.id === id); if (!r) return;
+      r.status = action;
+      if (action === 'Accepted') accepted++; else rejected++;
+      renderRequests();
+    }
+    function renderRequests() {
+      const pending = requests.filter(r => r.status === 'Pending');
+      document.getElementById('pending-count').textContent = pending.length;
+      document.getElementById('accepted-count').textContent = accepted;
+      document.getElementById('rejected-count').textContent = rejected;
+      document.getElementById('req-badge').textContent = pending.length;
+      if (requests.length === 0) {
+        document.getElementById('requests-list').classList.add('hidden');
+        document.getElementById('empty-state').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('empty-state').classList.add('hidden');
+      document.getElementById('requests-list').classList.remove('hidden');
+      document.getElementById('requests-list').innerHTML = requests.map(r => `
+        <div class="request-card" onclick="showRequest('${r.id}')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;">${r.name.split(' ').map(n=>n[0]).join('')}</div>
+            <div>
+              <div style="font-weight:700;">${r.name}</div>
+              <div style="font-size:0.85rem;color:var(--text-secondary);">${r.designation} • ${r.department}</div>
+              <div style="font-size:0.8rem;color:var(--text-placeholder);">Applied: ${r.requestDate}</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            ${r.status === 'Pending' ?
+              `<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();handleRequest('${r.id}','Rejected')">Reject</button>
+               <button class="btn btn-success btn-sm" onclick="event.stopPropagation();handleRequest('${r.id}','Accepted')">Accept</button>` :
+              `<span class="status-badge ${r.status === 'Accepted' ? 'resolved' : 'rejected'}">${r.status}</span>`}
+          </div>
+        </div>`).join('');
+    }
+    renderRequests();
+    document.addEventListener('click', e => { if (!document.getElementById('admin-profile').contains(e.target)) document.getElementById('profile-dropdown').classList.remove('show'); });
+  </script>
+</body>
+</html>

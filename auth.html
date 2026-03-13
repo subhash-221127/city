@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login or Register to CityFix - Smart City Complaint Management System">
+  <title>CityFix - Login / Register</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/theme.js"></script>
+</head>
+<body>
+  <div class="auth-container">
+    <!-- Left Panel -->
+    <div class="auth-left">
+      <div class="auth-left-content">
+        <a href="index.html" class="nav-logo" style="justify-content:center;margin-bottom:32px;font-size:1.8rem;">
+          <div class="logo-box" style="width:48px;height:48px;font-size:1.3rem;">C</div>
+          City<span class="accent">Fix</span>
+        </a>
+        <h1>Welcome to<br>City<span class="highlight">Fix</span></h1>
+        <p>Your one-stop platform for managing city complaints and building a better community together.</p>
+        <div class="hero-stats" style="margin-top:40px;gap:32px;">
+          <div class="hero-stat"><div class="hero-stat-num">10K+</div><div class="hero-stat-label">Issues Resolved</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">5K+</div><div class="hero-stat-label">Active Users</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="auth-right">
+      <div class="auth-form-box">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h2 id="form-title">Welcome Back</h2>
+          <button class="theme-toggle" onclick="toggleTheme()" style="width:36px;height:36px;">
+            <span id="theme-icon">🌙</span>
+          </button>
+        </div>
+        <p class="subtitle" id="form-subtitle">Sign in to your CityFix account</p>
+
+        <!-- Login Form -->
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" placeholder="Enter your password" required>
+          </div>
+          <div class="form-group">
+            <label for="role-select">Login As</label>
+            <select id="role-select" required>
+              <option value="citizen">🧑 Citizen</option>
+              <option value="admin">🔑 Admin</option>
+              <option value="officer">👮 Officer</option>
+            </select>
+          </div>
+          <button type="submit" class="auth-submit">Sign In</button>
+          <div class="divider">or continue with</div>
+          <button type="button" class="google-btn">
+            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            Continue with Google
+          </button>
+          <div class="auth-switch">
+            Don't have an account? <a href="#" id="show-register">Create one</a>
+          </div>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="hidden">
+          <div class="form-group">
+            <label for="reg-name">Full Name</label>
+            <input type="text" id="reg-name" placeholder="Enter your full name" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-email">Email Address</label>
+            <input type="email" id="reg-email" placeholder="Enter your email" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-phone">Phone Number</label>
+            <input type="tel" id="reg-phone" placeholder="Enter your phone number" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-password">Password</label>
+            <input type="password" id="reg-password" placeholder="Create a password" required>
+          </div>
+          <div class="form-group">
+            <label for="reg-role-select">Register As</label>
+            <select id="reg-role-select" required>
+              <option value="citizen">🧑 Citizen</option>
+              <option value="officer">👮 Officer</option>
+            </select>
+          </div>
+          <button type="submit" class="auth-submit">Create Account</button>
+          <div class="divider">or continue with</div>
+          <button type="button" class="google-btn">
+            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            Continue with Google
+          </button>
+          <div class="auth-switch">
+            Already have an account? <a href="#" id="show-login">Sign in</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="js/auth.js"></script>
+</body>
+</html>
